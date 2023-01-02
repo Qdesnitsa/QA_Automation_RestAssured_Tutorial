@@ -1,0 +1,7 @@
+wait.until(ExpectedConditions.presenceOfElementLocated(By.id("table")));
+
+wait.until(ExpectedConditions.refreshed(ExpectedConditions.stalenessOf("table")));
+
+
+driver.navigate().refersh();
+driver.findElement(By.xpath("xpath here")).click();
