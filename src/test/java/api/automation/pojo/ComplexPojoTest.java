@@ -1,12 +1,19 @@
 package api.automation.pojo;
 
 import api.automation.pojo.collection.*;
-import api.automation.pojo.simple.WorkspaceRoot;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
+import org.json.JSONException;
+import org.skyscreamer.jsonassert.Customization;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.skyscreamer.jsonassert.ValueMatcher;
+import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -14,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class ComplexPojoTest {
     @BeforeClass
@@ -34,7 +43,7 @@ public class ComplexPojoTest {
     }
 
     @Test
-    public void complex_pojo_create_collection() {
+    public void complex_pojo_create_collection() throws JsonProcessingException, JSONException {
 
         Header header = new Header("Content-Type", "application/json");
         List<Header> headerList = new ArrayList<>();
@@ -42,28 +51,118 @@ public class ComplexPojoTest {
 
         Body body = new Body("raw", "{\"data\": \"123\"}");
 
-        Request request = new Request("https://postman-echo.com/post",
+        RequestRequest request = new RequestRequest("https://postman-echo.com/post",
                 "POST", headerList, body, "This is a sample POST Request");
 
-        RequestRoot requestRoot = new RequestRoot("This is a folder", request);
-        List<RequestRoot> requestRootList = new ArrayList<>();
+        RequestRootRequest requestRoot = new RequestRootRequest("This is a folder", request);
+        List<RequestRootRequest> requestRootList = new ArrayList<>();
         requestRootList.add(requestRoot);
 
-        Folder folder = new Folder("This is a folder", requestRootList);
-        List<Object> folderList = new ArrayList<>();
+        FolderRequest folder = new FolderRequest("This is a folder", requestRootList);
+        List<FolderRequest> folderList = new ArrayList<>();
         folderList.add(folder);
 
         Info info = new Info("Collection1", "This is just a sample collection.",
                 "https://schema.getpostman.com/json/collection/v2.1.0/collection.json");
 
-        Collection collection = new Collection(info, folderList);
-        CollectionRoot collectionRoot = new CollectionRoot(collection);
+        CollectionRequest collection = new CollectionRequest(info, folderList);
+        CollectionRootBase collectionRoot = new CollectionRootRequest(collection);
 
-        given()
+        String collectionUid = given()
                 .body(collectionRoot)
                 .when()
                 .post("/collections")
                 .then()
-                .log().all();
+                .log().all()
+                .extract()
+                .response()
+                .path("collection.uid");
+
+        CollectionRootResponse deserializedCollectionRoot = given()
+                .pathParam("collectionUid", collectionUid)
+                .when()
+                .get("/collections/{collectionUid}")
+                .then()
+                .extract()
+                .response()
+                .as(CollectionRootResponse.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String collectionRootStr = objectMapper.writeValueAsString(collectionRoot);
+        String deserializedCollectionRootStr = objectMapper.writeValueAsString(deserializedCollectionRoot);
+
+        JSONAssert.assertEquals(collectionRootStr, deserializedCollectionRootStr,
+                new CustomComparator(JSONCompareMode.STRICT_ORDER,
+                        new Customization("collection.item[*].item[*].request.url", new ValueMatcher<Object>() {
+                            @Override
+                            public boolean equal(Object o, Object t1) {
+                                return true;
+                            }
+                        })));
+
+        List<String> urlRequestList = new ArrayList<>();
+        List<String> urlResponseList = new ArrayList<>();
+
+        for (RequestRootRequest requestRootRequest : requestRootList) {
+            urlRequestList.add(requestRootRequest.getRequest().getUrl());
+        }
+
+        List<FolderResponse> folderResponseList = deserializedCollectionRoot.getCollection().getItem();
+        for (FolderResponse folderResponse : folderResponseList) {
+            List<RequestRootResponse> requestRootResponseList = folderResponse.getItem();
+            for (RequestRootResponse requestRootResponse : requestRootResponseList) {
+                URL url = requestRootResponse.getRequest().getUrl();
+                urlResponseList.add(url.getRaw());
+            }
+        }
+
+        assertThat(urlResponseList, containsInAnyOrder(urlRequestList.toArray()));
+    }
+
+    @Test
+    public void without_folder_pojo_create_collection() throws JsonProcessingException, JSONException {
+
+        List<FolderRequest> folderList = new ArrayList<>();
+
+        Info info = new Info("Collection2", "This is just a sample collection.",
+                "https://schema.getpostman.com/json/collection/v2.1.0/collection.json");
+
+        CollectionRequest collection = new CollectionRequest(info, folderList);
+        CollectionRootBase collectionRoot = new CollectionRootRequest(collection);
+
+        String collectionUid = given()
+                .body(collectionRoot)
+                .when()
+                .post("/collections")
+                .then()
+                .log().all()
+                .extract()
+                .response()
+                .path("collection.uid");
+
+        CollectionRootResponse deserializedCollectionRoot = given()
+                .pathParam("collectionUid", collectionUid)
+                .when()
+                .get("/collections/{collectionUid}")
+                .then()
+                .extract()
+                .response()
+                .as(CollectionRootResponse.class);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String collectionRootStr = objectMapper.writeValueAsString(collectionRoot);
+        String deserializedCollectionRootStr = objectMapper.writeValueAsString(deserializedCollectionRoot);
+
+        assertThat(objectMapper.readTree(collectionRootStr),
+                equalTo(objectMapper.readTree(deserializedCollectionRootStr)));
+
+//        JSONAssert.assertEquals(collectionRootStr, deserializedCollectionRootStr,
+//                new CustomComparator(JSONCompareMode.STRICT_ORDER,
+//                        new Customization("collection.item[*].item[*].request.url", new ValueMatcher<Object>() {
+//                            @Override
+//                            public boolean equal(Object o, Object t1) {
+//                                return true;
+//                            }
+//                        })));
     }
 }

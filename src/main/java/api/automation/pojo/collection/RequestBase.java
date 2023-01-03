@@ -1,31 +1,24 @@
 package api.automation.pojo.collection;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
-public class Request {
-    private String url;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public abstract class RequestBase {
     private String method;
     private List<Header> header;
     private Body body;
     private String description;
 
-    public Request() {
+    public RequestBase() {
     }
 
-    public Request(String url, String method, List<Header> header, Body body, String description) {
-        this.url = url;
+    public RequestBase(String method, List<Header> header, Body body, String description) {
         this.method = method;
         this.header = header;
         this.body = body;
         this.description = description;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public String getMethod() {
