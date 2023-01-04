@@ -1,6 +1,5 @@
-package api.automation.pojo;
+package api.automation.pojo.collection;
 
-import api.automation.pojo.collection.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
