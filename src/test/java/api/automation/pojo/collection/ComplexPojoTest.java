@@ -102,18 +102,13 @@ public class ComplexPojoTest {
         List<String> urlRequestList = new ArrayList<>();
         List<String> urlResponseList = new ArrayList<>();
 
-        for (RequestRootRequest requestRootRequest : requestRootList) {
-            urlRequestList.add(requestRootRequest.getRequest().getUrl());
-        }
+        requestRootList
+                .forEach(requestRootRequest -> urlRequestList.add(requestRootRequest.getRequest().getUrl()));
 
         List<FolderResponse> folderResponseList = deserializedCollectionRoot.getCollection().getItem();
-        for (FolderResponse folderResponse : folderResponseList) {
-            List<RequestRootResponse> requestRootResponseList = folderResponse.getItem();
-            for (RequestRootResponse requestRootResponse : requestRootResponseList) {
-                URL url = requestRootResponse.getRequest().getUrl();
-                urlResponseList.add(url.getRaw());
-            }
-        }
+        folderResponseList
+                .forEach(folderResponse -> folderResponse.getItem()
+                .forEach(requestRootResponse -> urlResponseList.add(requestRootResponse.getRequest().getUrl().getRaw())));
 
         assertThat(urlResponseList, containsInAnyOrder(urlRequestList.toArray()));
     }
@@ -154,14 +149,5 @@ public class ComplexPojoTest {
 
         assertThat(objectMapper.readTree(collectionRootStr),
                 equalTo(objectMapper.readTree(deserializedCollectionRootStr)));
-
-//        JSONAssert.assertEquals(collectionRootStr, deserializedCollectionRootStr,
-//                new CustomComparator(JSONCompareMode.STRICT_ORDER,
-//                        new Customization("collection.item[*].item[*].request.url", new ValueMatcher<Object>() {
-//                            @Override
-//                            public boolean equal(Object o, Object t1) {
-//                                return true;
-//                            }
-//                        })));
     }
 }
