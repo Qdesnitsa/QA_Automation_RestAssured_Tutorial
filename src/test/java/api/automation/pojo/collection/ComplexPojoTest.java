@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.*;
 
 public class ComplexPojoTest {
     @BeforeClass
-    public void responseSpecificationInit() {
+    public void requestAndResponseSpecificationInit() {
         RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
         RestAssured.requestSpecification = requestSpecBuilder
                 .setBaseUri("https://api.postman.com")
