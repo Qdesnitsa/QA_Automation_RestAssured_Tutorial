@@ -1,5 +1,16 @@
-package api.automation.pojo.collection;
+package api.automation.pojo.complex;
 
+import api.automation.pojo.complex.body.Body;
+import api.automation.pojo.complex.collection.CollectionRequest;
+import api.automation.pojo.complex.collection_root.CollectionRootBase;
+import api.automation.pojo.complex.collection_root.CollectionRootRequest;
+import api.automation.pojo.complex.collection_root.CollectionRootResponse;
+import api.automation.pojo.complex.folder.FolderRequest;
+import api.automation.pojo.complex.folder.FolderResponse;
+import api.automation.pojo.complex.header.Header;
+import api.automation.pojo.complex.info.Info;
+import api.automation.pojo.complex.request.RequestRequest;
+import api.automation.pojo.complex.request_root.RequestRootRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;

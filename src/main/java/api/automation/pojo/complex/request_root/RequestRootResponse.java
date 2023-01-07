@@ -1,5 +1,6 @@
-package api.automation.pojo.collection;
+package api.automation.pojo.complex.request_root;
 
+import api.automation.pojo.complex.request.RequestResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

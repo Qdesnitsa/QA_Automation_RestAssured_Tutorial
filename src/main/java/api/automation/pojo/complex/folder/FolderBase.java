@@ -1,15 +1,15 @@
-package api.automation.pojo.collection;
+package api.automation.pojo.complex.folder;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class RequestRootBase {
+public abstract class FolderBase {
     private String name;
 
-    public RequestRootBase() {
+    public FolderBase() {
     }
 
-    public RequestRootBase(String name) {
+    public FolderBase(String name) {
         this.name = name;
     }
 

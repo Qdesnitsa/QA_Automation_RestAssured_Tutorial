@@ -1,5 +1,7 @@
-package api.automation.pojo.collection;
+package api.automation.pojo.complex.request;
 
+import api.automation.pojo.complex.body.Body;
+import api.automation.pojo.complex.header.Header;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;

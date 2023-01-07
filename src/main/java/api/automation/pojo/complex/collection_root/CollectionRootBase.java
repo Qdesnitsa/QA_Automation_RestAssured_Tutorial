@@ -1,4 +1,4 @@
-package api.automation.pojo.collection;
+package api.automation.pojo.complex.collection_root;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

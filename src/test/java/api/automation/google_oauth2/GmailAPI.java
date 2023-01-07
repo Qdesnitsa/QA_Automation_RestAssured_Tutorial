@@ -1,5 +1,8 @@
 package api.automation.google_oauth2;
 
+import api.automation.authentication.google_oauth2.History;
+import api.automation.authentication.google_oauth2.HistoryResponse;
+import api.automation.authentication.google_oauth2.Profile;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -14,12 +17,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class GmailAPI {
     private RequestSpecification requestSpecification;
     private ResponseSpecification responseSpecification;
-    private String accessToken = "ya29.a0AX9GBdVpkP7sB6qK8leew2g2VVXTyZ3WcwRWIUqrDqb8TSyUa7RAUZ9JHwxrrE6bUpQ4Ccm_OC_4KzI15kGEn2_qzoTMjxn-XY0LwC2bBK1rFXguQ9eoGcs1CfmCyuIRLnrbuXeIDymNIsbN6hly9dWvA_q8GRQaCgYKAdESAQASFQHUCsbCYDZp9wl6SdrYCdetCSXAhw0166";
+    private String accessToken
+            = "ya29.a0AX9GBdVpfWueLcNnb353Xww5b5QTu7AKPCe2UKGlbSVuANSJMwGWv19H2FO-mdXgLJfbjJUg2m_6EH6WuO2GIhBdTjfZQsMyFtLJR0_jKd-EFzeO9POD5JpQ-ACyKEczOJSPnaY_aIHLpimth_9Am0Sr-ouoc1nRaCgYKAXUSAQASFQHUCsbCjeSeCAfrjkzuY5P3uUNVrA0167";
     private String userId = "lenkasid90@gmail.com";
+    private int startHistoryId = 45174;
 
     @BeforeClass
     public void requestAndResponseSpecificationInit() {
@@ -40,20 +47,58 @@ public class GmailAPI {
     }
 
     @Test
-    public void getUserProfile() {
-        given(requestSpecification)
+    public void getExactNumberOfIncomeMessages() {
+        History messages = given(requestSpecification)
+                .basePath("/gmail/v1")
+                .pathParam("userid", userId)
+                .queryParams("maxResults", 10)
+                .when()
+                .get("/users/{userid}/messages")
+                .then()
+                .extract()
+                .response()
+                .as(History.class);
+        assertThat(messages.getMessages().size(), equalTo(10));
+    }
+
+    //documentation: https://developers.google.com/gmail/api/reference/rest/v1/users.history/list
+    @Test
+    public void getIncomeMessagesAfterStartHistoryId() {
+        //startHistoryId = Integer.parseInt(getMyProfile().getHistoryId());
+        sendMessageToMyself();
+        HistoryResponse historyResponse = given(requestSpecification)
+                .basePath("/gmail/v1")
+                .pathParam("userid", userId)
+                .queryParams("startHistoryId", startHistoryId)
+                .when()
+                .get("/users/{userid}/history")
+                .then()
+                .extract()
+                .response()
+                .as(HistoryResponse.class);
+        assertThat(historyResponse.getHistory().size(), greaterThanOrEqualTo(1));
+    }
+
+    // documentation: https://developers.google.com/gmail/api/reference/rest/v1/users/getProfile
+    private Profile getMyProfile() {
+        Profile profile = given(requestSpecification)
                 .basePath("/gmail/v1")
                 .pathParam("userid", userId)
                 .when()
                 .get("/users/{userid}/profile")
                 .then()
-                .spec(responseSpecification);
+                .extract()
+                .response()
+                .as(Profile.class);
+        return profile;
     }
 
-    @Test
-    public void sendMessage() {
+    // documentation: https://developers.google.com/gmail/api/reference/rest/v1/users.messages/send
+    // message structure: https://developers.google.com/gmail/api/reference/rest/v1/users.messages#Message
+    // base64 encoder/decoder: https://ostermiller.org/calc/encode.html
+    private void sendMessageToMyself() {
         String message = "From: lenkasid90@gmail.com\n" +
-                "To: lenkasid@tut.by\n" +
+                "To: lenkasid90@gmail.com\n" +
                 "Subject: Rest Assured Test Email\n" +
                 "\n" +
                 "Sending from Rest Assured";
@@ -71,4 +116,5 @@ public class GmailAPI {
                 .then()
                 .spec(responseSpecification);
     }
+
 }

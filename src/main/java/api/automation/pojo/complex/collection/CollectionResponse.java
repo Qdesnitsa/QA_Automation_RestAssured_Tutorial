@@ -1,5 +1,7 @@
-package api.automation.pojo.collection;
+package api.automation.pojo.complex.collection;
 
+import api.automation.pojo.complex.folder.FolderResponse;
+import api.automation.pojo.complex.info.Info;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
