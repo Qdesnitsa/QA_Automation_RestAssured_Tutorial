@@ -23,7 +23,7 @@ by <b>authenticating</b> them through another service or provider
 4. Create Client Credentials (Callback URL, Client Secret, Client Secret)
 
 #### Authorization Code Flow steps:
-documentation: https://developers.google.com/identity/protocols/oauth2/web-server
+documentation: https://developers.google.com/identity/protocols/oauth2/web-server<br>
 5. Authorize App in Postman:
  - HTTP-method GET https://accounts.google.com/o/oauth2/v2/auth
  - Query Params:
@@ -53,7 +53,7 @@ documentation: https://developers.google.com/identity/protocols/oauth2/web-serve
      - refresh_token = paste value of Refresh Token from p.7
  
 #### Implicit Flow steps:
-documentation: https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow
+documentation: https://developers.google.com/identity/protocols/oauth2/javascript-implicit-flow<br>
 9. Authorize App in Postman:
 - HTTP-method GET https://accounts.google.com/o/oauth2/v2/auth
 - Query Params:
@@ -68,7 +68,7 @@ documentation: https://developers.google.com/identity/protocols/oauth2/javascrip
 where value of query parameter code = Access Token
 
 #### OpenID Connect (OIDC) steps:
-documentation: https://developers.google.com/identity/openid-connect/openid-connect
+documentation: https://developers.google.com/identity/openid-connect/openid-connect<br>
 11. Authentication in Postman:
 - HTTP-method GET https://accounts.google.com/o/oauth2/v2/auth
 - Query Params:
