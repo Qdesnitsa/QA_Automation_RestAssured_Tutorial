@@ -1,4 +1,4 @@
-package api.automation.authentication.basic;
+package api.automation.authentication.base;
 
 import java.util.Base64;
 

@@ -62,7 +62,8 @@ public class JacksonAPI_JSON {
                 .post("/workspaces")
                 .then()
                 .log().all()
-                .extract().response();
+                .extract()
+                .response();
         assertThat(response.path("workspace.name"), equalTo("myWorkspace1"));
         assertThat(response.path("workspace.id"), matchesPattern("^[a-z0-9-]{36}$"));
     }
@@ -85,7 +86,6 @@ public class JacksonAPI_JSON {
                 .post("/post")
                 .then()
                 .log().all()
-                .assertThat()
                 .body("msg", equalTo("Success"));
     }
 
@@ -108,7 +108,8 @@ public class JacksonAPI_JSON {
                 .post("/workspaces")
                 .then()
                 .log().all()
-                .extract().response();
+                .extract()
+                .response();
         assertThat(response.path("workspace.name"), equalTo("myWorkspace10"));
         assertThat(response.path("workspace.id"), matchesPattern("^[a-z0-9-]{36}$"));
     }

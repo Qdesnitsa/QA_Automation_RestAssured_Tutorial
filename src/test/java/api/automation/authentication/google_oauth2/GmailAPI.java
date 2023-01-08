@@ -1,4 +1,4 @@
-package api.automation.google_oauth2;
+package api.automation.authentication.google_oauth2;
 
 import api.automation.authentication.google_oauth2.History;
 import api.automation.authentication.google_oauth2.HistoryResponse;
@@ -46,6 +46,7 @@ public class GmailAPI {
         responseSpecification = responseSpecBuilder.build();
     }
 
+    //documentation: https://developers.google.com/gmail/api/reference/rest/v1/users.messages/list
     @Test
     public void getExactNumberOfIncomeMessages() {
         History messages = given(requestSpecification)

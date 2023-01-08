@@ -36,14 +36,13 @@ public class LoggingFilter {
                 .baseUri("https://postman-echo.com")
                 //.filter(new RequestLoggingFilter(LogDetail.BODY, fileOutputStream))
                 //.filter(new ResponseLoggingFilter(LogDetail.STATUS, fileOutputStream))
-                ////.filter(new RequestLoggingFilter(LogDetail.BODY))
-                ////.filter(new ResponseLoggingFilter(LogDetail.STATUS))
+                //.filter(new RequestLoggingFilter(LogDetail.BODY))
+                //.filter(new ResponseLoggingFilter(LogDetail.STATUS))
                 //.log().all()
                 .when()
                 .get("/get")
                 .then().spec(responseSpecification)
                 //.log().all()
-                .assertThat()
                 .statusCode(200);
     }
 }

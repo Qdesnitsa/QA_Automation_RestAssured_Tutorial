@@ -90,3 +90,20 @@ Body x-www-form-urlencoded
  - grant_type = authorization_code
  - redirect_uri = https://localhost:8080 (equals to Callback URL, can be unavailable URL)<br>
 *possibility to decode and get info (head, payload, signature) from JWT Token: https://jwt.io/
+
+***
+
+### Session Based Authentication
+Authentication details are stored on the server side, less secure (CSRF Token to prevent CSRF attacks), only for single domain.
+Server creates session in DB or local memory with user info and sends session ID back to the client.
+Session ID in the form of a Cookie is stored by the client's browser.
+ - Form based authorization<br><br>
+Get Spring Security Application for testing purposes, steps:
+1. Go to repository: https://github.com/dangeabunea/RomanianCoderExamples 
+2. Download and unzip
+3. Go to application: RomanianCoderExamples-master\SpringBootSecurity\Forms
+4. mvnw.cmd clean install
+5. cd target
+6. java -jar springboot-security-forms-0.0.1-SNAPSHOT.jar
+7. Enter in browser https://localhost:8443
+***

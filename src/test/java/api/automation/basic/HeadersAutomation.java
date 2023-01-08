@@ -84,6 +84,7 @@ public class HeadersAutomation {
         //extractedHeaders.asList().stream().forEach(s -> System.out.println("name=" + s.getName() + " value=" + s.getValue()));
 
         List<String> values = extractedHeaders.getValues("multiValueHeader");
-        values.stream().forEach(s -> System.out.println(s));
+        values.stream()
+                .forEach(System.out::println);
     }
 }
