@@ -20,7 +20,7 @@ by <b>authenticating</b> them through another service or provider
 1. https://console.cloud.google.com/apis/dashboard - create Client App
 2. Enable Gmail API
 3. Create Consent Screen
-4. Create Client Credentials (Callback URL, Client Secret, Client Secret)
+4. Create Client Credentials (Callback URL, Client ID, Client Secret)
 
 #### Authorization Code Flow steps:
 documentation: https://developers.google.com/identity/protocols/oauth2/web-server<br>
