@@ -51,6 +51,7 @@ documentation: https://developers.google.com/identity/protocols/oauth2/web-serve
      - client_secret = get Client Secret from p.4 above<br>
      - grant_type = refresh_token
      - refresh_token = paste value of Refresh Token from p.7<br>
+
 tests in this repository: package api.automation.authentication.google_oauth2.GmailAPI
  
 #### Implicit Flow steps:
@@ -107,5 +108,6 @@ Get Spring Security Application for testing purposes, steps:
 5. cd target
 6. java -jar springboot-security-forms-0.0.1-SNAPSHOT.jar
 7. Enter in browser https://localhost:8443<br>
+
 tests in this repository: package api.automation.authentication.form_authentication.FormAuthSpringSecurity
 ***
